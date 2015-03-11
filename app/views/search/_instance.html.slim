@@ -1,0 +1,10 @@
+tr
+  th.col-md-3.text-right= symbol.documentation
+  td.col-md-9
+    .form-inline
+      - instance.each do |sym, instance|
+        .checkbox
+          label
+            input[type="checkbox" name="#{symbol.to_s.demodulize.underscore}[]" value="#{sym}"]
+            = " #{instance.documentation} "
+            | &nbsp; &nbsp;

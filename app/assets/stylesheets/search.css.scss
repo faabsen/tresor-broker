@@ -1,0 +1,23 @@
+// Place all the styles related to the Categories controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.table-highlight, .table-highlight:hover {
+  font-weight: bold;
+  background: #3e3e3e !important;
+  color: #FFF;
+}
+
+.table-column-highlight, .table-column-highlight:hover {
+  font-weight: bold;
+  background: #888888 !important;
+  color: #FFF;
+}
+
+.table-hr, .table-hr:hover {
+  background: #111 !important;
+  height: 5px;
+  padding: 0 !important;
+}
+
+.table-search th { background: whitesmoke; font-size: 90% !important;}
+.table-search td { padding-bottom: 2px !important;font-size: 90% !important; }

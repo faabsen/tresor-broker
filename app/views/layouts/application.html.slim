@@ -24,12 +24,15 @@ body
           li
             = link_to t('broker.menu.services'), services_path
 
+          li
+            = link_to t('broker.menu.search'), search_path
+
           - if @client
             li
               = link_to t('broker.menu.bookings'), client_bookings_path(@client)
 
       - if @client
-        div.pull-right= t('broker.logged_in_as', user: @tresor_identity, organization: @client.tresor_organization)
+        p.navbar-text.navbar-right= t('broker.logged_in_as', user: @tresor_identity, organization: @client.tresor_organization)
 
   .container
     .row-fluid

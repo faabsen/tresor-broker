@@ -11,6 +11,14 @@ OpenServiceBroker::Application.routes.draw do
 
   get '/service_uuid/:name', to: 'services#uuid'
 
+  post '/compare', to: 'compare#compare', as: :compare
+  get '/compare/:service1', to: 'compare#show', as: :show
+  get '/compare/:service1/:service2', to: 'compare#show'
+  get '/compare/:service1/:service2/:service3', to: 'compare#show'
+  get '/compare/:service1/:service2/:service3/:service4', to: 'compare#show'
+
+  get '/search', to: 'search#search'
+
   resources :services do
     get '', on: :collection, action: 'list'
     get 'edit', on: :member, action: 'edit'
@@ -38,4 +46,5 @@ OpenServiceBroker::Application.routes.draw do
   get '/bookings', to: 'bookings#list_all'
 
   resources :providers, defaults: {format: 'xml'}
+
 end

@@ -1,0 +1,62 @@
+- if sub_property.type < SDL::Types::SDLSimpleType
+  tr
+    th= sub_property.documentation
+    - services.each do |service|
+      td
+        - unless service.send(property.name).try(sub_property.name).blank?
+          == render_prop(service.send(property.name).send(sub_property.name))
+- elsif sub_property.type.multi_property? || sub_property.type.single_property?
+  - if sub_property.multi?
+    tr
+      th= sub_property.documentation
+      - services.each do |service|
+        td
+          - unless service.try(property.name).try(sub_property.name).blank?
+            - [service.send(property.name).send(sub_property.name)].flatten.each do |v|
+              - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
+                == render_value(v)
+              - else
+                li== render_value(v)
+  - else
+    tr
+      th.table-column-highlight[colspan="#{services_count}"]= sub_property.documentation
+    - sub_property.type.properties.each do |value|
+      - if value.multi?
+        tr
+          th= value.documentation
+          - services.each do |service|
+            td
+              - unless service.try( property.name ).try(sub_property.name).try(value.name).blank?
+                - [service.send(property.name).send(sub_property.name).send(value.name)].flatten.each do |v|
+                  - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
+                    == render_value(v)
+                  - else
+                    li== render_value(v)
+      - else
+        tr
+          th= value.documentation
+          - services.each do |service|
+            td
+              - unless service.try( property.name ).try(sub_property.name).try(value.name).blank?
+                == render_value(service.send(property.name).send(sub_property.name).send(value.name))
+- elsif sub_property.multi?
+  tr
+    th= sub_property.documentation
+    - services.each do |service|
+      td
+        - unless service.try( property.name ).try(sub_property.name).blank?
+          - [service.send(property.name).send(sub_property.name)].flatten.each do |v|
+            - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
+              == render_value(v)
+            - else
+              li== render_value(v)
+- elsif sub_property.single?
+  tr
+    th= sub_property.documentation
+    - services.each do |service|
+      td
+        - unless service.try( property.name ).try(sub_property.name).blank?
+          == render_value(service.send(property.name).send(sub_property.name))
+- else
+  tr
+    td[colspan="#{services_count}"] unknown

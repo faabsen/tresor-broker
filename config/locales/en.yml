@@ -33,6 +33,7 @@ en:
       preview: "Preview"
       help: "Syntax"
     list:
+      header: "List of all services in the Open Service Broker"
       source: "Source"
       edit: "Edit"
       list: "Services"
@@ -75,6 +76,14 @@ en:
     descendants: "Subtypes"
     not_yet_defined: "not_yet_defined"
     service_property: "Service property"
+  categories:
+    list:
+      header: "List of all service categories in the Open Service Broker"
+      list: "Categories"
+    show:
+      header: "List of all categories of type '%{category_name}'"
+      category_not_found: "Cannot find category"
+      category_not_found_detail: "The URL or the service description are invalid."
   sdl:
     type:
       booking: "Information about the service booking process"
