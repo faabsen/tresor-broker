@@ -76,14 +76,11 @@ en:
     descendants: "Subtypes"
     not_yet_defined: "not_yet_defined"
     service_property: "Service property"
-  categories:
-    list:
-      header: "List of all service categories in the Open Service Broker"
-      list: "Categories"
+  compare:
     show:
-      header: "List of all categories of type '%{category_name}'"
-      category_not_found: "Cannot find category"
-      category_not_found_detail: "The URL or the service description are invalid."
+      header: "Service comparison"
+      not_found: "Cannot find service(s)"
+      not_found_detail: "The service name is invalid."
   sdl:
     type:
       booking: "Information about the service booking process"
@@ -108,11 +105,18 @@ en:
           draft: "Draft"
           deleted: "Deleted"
           approved: "Approved"
+  search:
+    search:
+      header: Search
+      comparison: Compare services
+      not_found: No service(s) available.
+
   broker:
     logged_in_as: "Logged in as \"%{user}\" (TRESOR organization \"%{organization}\")"
     menu:
       services: "Services"
       bookings: "Bookings"
+      search: "Search"
     bookings:
       list: "List of all bookings for client \"%{organization}\""
       list_table:

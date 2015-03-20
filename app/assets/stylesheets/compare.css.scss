@@ -7,6 +7,11 @@
   color: #FFF;
 }
 
+
+table#compare td, table#compare td a {
+  word-break: break-all !important;
+}
+
 .table-column-highlight, .table-column-highlight:hover {
   font-weight: bold;
   background: #888888 !important;

@@ -41,14 +41,25 @@ The services contained in the Open Service Broker are described using the [SDL-N
 
     # order
     @services = Service.latest_with_status('approved').where(name: {'$in' => service_names})
+    @services_count = @services.count + 1
+
+    @properties = Hash[]
+
+    @services.each do |service|
+      @properties.deep_merge!(service.property_values)
+    end
+
+    #@properties.each do |sym, value|
+    #  puts compendium.type_instances
+    #end
 
     if @services.blank?
-      flash[:message] = t('categories.show.category_not_found')
-      flash[:error] = t('categories.show.category_not_found_detail')
+      flash[:message] = t('compare.show.not_found')
+      flash[:error] = t('compare.show.not_found_detail')
 
-      render text: 'Category not found', status: 404
+      #render text: 'Service(s) not found', status: 404
 
-      #redirect_to :action => :index
+      redirect_to :controller => 'search', :action => 'search'
     end
   end
 end

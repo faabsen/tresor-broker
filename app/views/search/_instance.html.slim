@@ -5,6 +5,9 @@ tr
       - instance.each do |sym, instance|
         .checkbox
           label
-            input[type="checkbox" name="#{symbol.to_s.demodulize.underscore}[]" value="#{sym}"]
+            - if params.has_key?(symbol.to_s.demodulize.underscore) && params[symbol.to_s.demodulize.underscore].include?(sym.to_s)
+              input[type="checkbox" name="#{symbol.to_s.demodulize.underscore}[]" value="#{sym}" checked="checked" ]
+            - else
+              input[type="checkbox" name="#{symbol.to_s.demodulize.underscore}[]" value="#{sym}" ]
             = " #{instance.documentation} "
             | &nbsp; &nbsp;

@@ -1,0 +1,5 @@
+.col-sm-6
+  .input-group
+    span.input-group-addon
+      input[type='checkbox' name='services[]' value='#{service.name}' id='#{service.name}']
+    label.form-control[for="#{service.name}"] #{service.service_name || service.service_id}

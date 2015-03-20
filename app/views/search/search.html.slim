@@ -1,22 +1,37 @@
-= form_tag search_path, :method => :get, :role => 'form' do |f|
+= render 'flash'
+
+= form_tag search_path + '#comparison', :method => :get, :role => 'form' do |f|
   .panel.panel-default
     .panel-heading
-      h3.panel-title Search
-    = render 'instances_list', :instances => @compendium.type_instances
+      h3.panel-title= t('search.search.header')
+    table.table.table-condensed.table-search
+      - Service.properties(true).each do |property|
+        = render :partial => 'service_properties', locals: {:property => property, :params => @params}
+    .panel-footer.clearfix
+      button.btn.btn-primary.btn-xs.pull-right[type='submit'] Filter
+
+/= form_tag search_path + '#comparison', :method => :get, :role => 'form' do |f|
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title= t('search.search.header')
+    table.table.table-condensed.table-search
+      - @compendium.type_instances.each do |symbol, instance|
+        - unless instance.blank?
+          == render :partial => 'instance', locals: {:symbol => symbol, :instance => instance, :params => @params}
     .panel-footer.clearfix
       button.btn.btn-primary.btn-xs.pull-right[type='submit'] Filter
   /= render 'properties_list', :properties => Service.properties(true)
+
 = form_tag compare_path, :method => :post, :role => 'form' do |f|
-  .panel.panel-default
+  #comparison.panel.panel-default
     .panel-heading
-      h3.panel-title Compare services
+      h3.panel-title= t('search.search.comparison')
     .panel-body
-      row
-        - @services.each do |service|
-          .col-sm-6
-            .input-group
-              span.input-group-addon
-                input[type='checkbox' name='services[]' value='#{service.name}' id='#{service.name}']
-              label.form-control[for="#{service.name}"] #{service.service_name || service.service_id}
+      - if @services.blank?
+        p= t('search.search.not_found')
+      - else
+        row
+          - @services.each do |service|
+            == render :partial => 'service', locals: { :service => service }
     .panel-footer.clearfix
       button.btn.btn-primary.btn-xs.pull-right[type='submit'] Compare

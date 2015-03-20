@@ -1,14 +1,14 @@
 - if (property.type < SDL::Types::SDLSimpleType)
   tr
-    th= property.documentation
+    th.col-md-2= property.documentation
     - services.each do |service|
-      td== render_prop(service.send(property.name))
+      td[class="col-md-#{12/services_count}"]== render_prop(service.send(property.name))
 - elsif property.type.multi_property? || property.type.single_property?
   -if property.multi?
     tr
-      th= property.documentation
+      th.col-md-2= property.documentation
       - services.each do |service|
-        td
+        td[class="col-md-#{12/services_count}"]
           - [service.send(property.name)].flatten.each do |v|
             - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
               == render_value(v)
@@ -23,9 +23,9 @@
       td.table-hr[colspan="#{services_count}"]
 - elsif property.multi?
   tr
-    th= property.documentation
+    th.col-md-2= property.documentation
     - services.each do |service|
-      td
+      td[class="col-md-#{12/services_count}"]
         - [service.send(property.name)].flatten.each do |v|
           - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
             == render_value(v)
@@ -33,9 +33,9 @@
             li== render_value(v)
 - elsif property.single?
   tr
-    th= property.documentation
+    th.col-md-2= property.documentation
     - services.each do |service|
-      td== render_prop(service.send(property.name))
+      td[class="col-md-#{12/services_count}"]== render_prop(service.send(property.name))
 - else
   tr
     td[colspan="#{services_count}"] unknown

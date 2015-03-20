@@ -1,12 +1,9 @@
 class SearchController < ApplicationController
   resource_description do
-    short 'Categories'
+    short 'Search services'
     full_description <<-END
 The services contained in the Open Service Broker are described using the [SDL-NG framework](https://github.com/TU-Berlin-SNET/sdl-ng), please refer it to get information about the general syntax of the service descriptions. (currently not up-to-date!)
 
-The services can be seperated into several categories, using the current vocabulary [on this page](/schema).
-
-## Service categories
     END
   end
 
@@ -20,12 +17,24 @@ The services can be seperated into several categories, using the current vocabul
   END
   formats ['html']
   def search
-    @services = Service.latest_with_status('approved')
-    #TODO: just display the categories that are used -> db.sdl_base_type_services.distinct('service_categories.identifier')
-    instances = compendium.type_instances
 
+    request.query_parameters.delete("utf8")
+
+    @query = {}
+    request.query_parameters.each do |key, value|
+      @query.store("#{key}.identifier", {"$in" => value})
+    end
+
+    #TODO: move query to extra method -> Service.filter()
+    @services = Service.latest_with_status('approved').where(@query)
+
+    choices = compendium.type_instances.select { |key, value| key.to_s.match(/^choice\d+/) }
+
+
+    @params = request.query_parameters
     @compendium = compendium
 
+    #instances = compendium.type_instances
     #instances.each do |symbol, instance|
     #  puts instance.empty?
     #end

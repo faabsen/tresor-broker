@@ -1,18 +1,9 @@
 h1
   = link_to t('broker.menu.search'), search_path
-  | &nbsp; &laquo; &nbsp; Comparison
+  | &nbsp; &laquo; &nbsp;
+  = t('compare.show.header')
 hr
 
-- hash = {}
-
-- services_count = @services.count + 1
-- services = @services.all.to_a
-- services.each do |service|
-  - hash.deep_merge!(service.property_values)
-
-- puts hash
-
-.panel.panel-default
-  table.table.table-bordered.table-hover
-    - Service.properties.each do |property|
-      == render 'properties', {:property => property, :services => services, :services_count => services_count}
+table#compare.table.table-bordered.table-hover
+  - @properties.each do |property|
+    == render :partial => 'properties', locals: {:property => property.first, :services => @services, :services_count => @services_count}
