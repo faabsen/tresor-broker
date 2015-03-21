@@ -1,10 +1,10 @@
-- if (property.type < SDL::Types::SDLSimpleType)
+- if property.type < SDL::Types::SDLSimpleType
   tr
     th.col-md-2= property.documentation
     - services.each do |service|
       td[class="col-md-#{12/services_count}"]== render_prop(service.send(property.name))
-- elsif property.type.multi_property? || property.type.single_property?
-  -if property.multi?
+- elsif property.type < SDL::Base::Type
+  - if property.multi?
     tr
       th.col-md-2= property.documentation
       - services.each do |service|
@@ -15,27 +15,20 @@
             - else
               li== render_value(v)
   - else
-    tr
-      th.table-highlight[colspan="#{services_count}"]= property.documentation
-    - property.type.properties.each do |sub_property|
-      == render 'value', {:property => property, :sub_property => sub_property, :services => services, :services_count => services_count}
-    tr
-      td.table-hr[colspan="#{services_count}"]
-- elsif property.multi?
-  tr
-    th.col-md-2= property.documentation
-    - services.each do |service|
-      td[class="col-md-#{12/services_count}"]
-        - [service.send(property.name)].flatten.each do |v|
-          - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
-            == render_value(v)
-          - else
-            li== render_value(v)
-- elsif property.single?
-  tr
-    th.col-md-2= property.documentation
-    - services.each do |service|
-      td[class="col-md-#{12/services_count}"]== render_prop(service.send(property.name))
+    - if value.property_values.blank?
+      tr
+        th.col-md-2= property.documentation
+        - services.each do |service|
+          td[class="col-md-#{12/services_count}"]
+            == render_prop(service.send(property.name))
+              / == v.documentation
+    - else
+      tr
+        th.table-highlight[colspan="#{services_count}"]= property.documentation
+      - value.property_values.each do |sub_property, value|
+        == render 'value', {:property => property, :sub_property => sub_property, :value => value, :services => services, :services_count => services_count}
+      tr
+        td.table-hr[colspan="#{services_count}"]
 - else
   tr
     td[colspan="#{services_count}"] unknown

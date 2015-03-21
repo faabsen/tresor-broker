@@ -4,9 +4,9 @@
     - services.each do |service|
       td[class="col-md-#{12/services_count}"]
         - unless service.send(property.name).try(sub_property.name).blank?
-          == render_prop(service.send(property.name).send(sub_property.name))
+          == render_value(service.send(property.name).send(sub_property.name))
 - elsif sub_property.type.multi_property? || sub_property.type.single_property?
-  - if sub_property.multi?#
+  - if sub_property.multi?
     tr
       th.col-md-2= sub_property.documentation
       - services.each do |service|
@@ -20,25 +20,25 @@
   - else
     tr
       th.table-column-highlight[colspan="#{services_count}"]= sub_property.documentation
-    - sub_property.type.properties.each do |value|
-      - if value.multi?
+    - value.property_values.each do |p, v|
+      - if p.multi?
         tr
-          th.col-md-2= value.documentation
+          th.col-md-2= p.documentation
           - services.each do |service|
             td[class="col-md-#{12/services_count}"]
-              - unless service.try( property.name ).try(sub_property.name).try(value.name).blank?
-                - [service.send(property.name).send(sub_property.name).send(value.name)].flatten.each do |v|
-                  - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
-                    == render_value(v)
+              - unless service.try( property.name ).try(sub_property.name).try(p.name).blank?
+                - [service.send(property.name).send(sub_property.name).send(p.name)].flatten.each do |va|
+                  - if (va.class < SDL::Types::SDLSimpleType) || va.class.multi_property?
+                    == render_value(va)
                   - else
-                    li== render_value(v)
+                    li== render_value(va)
       - else
         tr
-          th.col-md-2= value.documentation
+          th.col-md-2= p.documentation
           - services.each do |service|
             td[class="col-md-#{12/services_count}"]
-              - unless service.try( property.name ).try(sub_property.name).try(value.name).blank?
-                == render_value(service.send(property.name).send(sub_property.name).send(value.name))
+              - unless service.try( property.name ).try(sub_property.name).try(p.name).blank?
+                == render_value(service.send(property.name).send(sub_property.name).send(p.name))
 - elsif sub_property.multi?
   tr
     th.col-md-2= sub_property.documentation

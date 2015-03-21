@@ -10,7 +10,7 @@ The services contained in the Open Service Broker are described using the [SDL-N
 
   #before_filter :disable_pretty_printing, :only => [:new, :edit, :create]
 
-  api :POST, 'compare', 'Service comparison'
+  api :GET, 'compare', 'Service comparison'
   description <<-END
 
   END
@@ -22,7 +22,13 @@ The services contained in the Open Service Broker are described using the [SDL-N
 
     if params[:services]
       redirect_to :controller => 'compare', :action => 'show', :service1 => params[:services][0], :service2 => params[:services][1], :service3 => params[:services][2], :service4 => params[:services][3]
+    else
+      flash[:message] = t('compare.show.not_found')
+      flash[:error] = t('compare.show.not_found_detail')
+
+      redirect_to :controller => 'search', :action => 'search'
     end
+
   end
 
   api :GET, 'compare/:service1[/:service2[/:service3[/:service4]]]', 'Service comparison'
@@ -39,8 +45,10 @@ The services contained in the Open Service Broker are described using the [SDL-N
   def show
     service_names = [params[:service1],params[:service2],params[:service3],params[:service4]]
 
+    services = Service.latest_with_status('approved').where(name: {'$in' => service_names})
+
     # order
-    @services = Service.latest_with_status('approved').where(name: {'$in' => service_names})
+    @services = services
     @services_count = @services.count + 1
 
     @properties = Hash[]
@@ -49,15 +57,11 @@ The services contained in the Open Service Broker are described using the [SDL-N
       @properties.deep_merge!(service.property_values)
     end
 
-    #@properties.each do |sym, value|
-    #  puts compendium.type_instances
-    #end
+    puts @properties.inspect
 
     if @services.blank?
       flash[:message] = t('compare.show.not_found')
       flash[:error] = t('compare.show.not_found_detail')
-
-      #render text: 'Service(s) not found', status: 404
 
       redirect_to :controller => 'search', :action => 'search'
     end
