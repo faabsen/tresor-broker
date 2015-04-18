@@ -1,3 +1,6 @@
 .checkbox
   label
-    input[type="checkbox" name="#{value.name}" value="true"]
+    - if params.has_key?(parent + value.name) && params[parent + value.name].include?("true")
+      input[type="checkbox" name="#{parent}#{value.name}" value="true" checked="checked" ]
+    - else
+      input[type="checkbox" name="#{parent}#{value.name}" value="true" ]

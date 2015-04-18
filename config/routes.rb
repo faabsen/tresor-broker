@@ -11,7 +11,7 @@ OpenServiceBroker::Application.routes.draw do
 
   get '/service_uuid/:name', to: 'services#uuid'
 
-  post '/compare', to: 'compare#compare', as: :compare
+  get '/compare', to: 'compare#compare', as: :compare
   get '/compare/:service1', to: 'compare#show', as: :show
   get '/compare/:service1/:service2', to: 'compare#show'
   get '/compare/:service1/:service2/:service3', to: 'compare#show'

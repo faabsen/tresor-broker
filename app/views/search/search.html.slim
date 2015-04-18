@@ -1,29 +1,19 @@
 = render 'flash'
 
-= form_tag search_path + '#comparison', :method => :get, :role => 'form' do |f|
+- parent = ''
+
+= form_tag search_path + '#comparison', :method => :get, :id => 'search', :role => 'form' do |f|
   .panel.panel-default
     .panel-heading
       h3.panel-title= t('search.search.header')
     table.table.table-condensed.table-search
       - Service.properties(true).each do |property|
-        = render :partial => 'service_properties', locals: {:property => property, :params => @params}
+        = render :partial => 'service_properties', locals: {:property => property, :params => @params, :parent => parent}
     .panel-footer.clearfix
-      button.btn.btn-primary.btn-xs.pull-right[type='submit'] Filter
+      button.btn.btn-primary.btn-xs.pull-right[type='submit']= t('search.search.filter')
 
-/= form_tag search_path + '#comparison', :method => :get, :role => 'form' do |f|
+= form_tag compare_path, :method => :get, :id => 'comparison', :role => 'form' do |f|
   .panel.panel-default
-    .panel-heading
-      h3.panel-title= t('search.search.header')
-    table.table.table-condensed.table-search
-      - @compendium.type_instances.each do |symbol, instance|
-        - unless instance.blank?
-          == render :partial => 'instance', locals: {:symbol => symbol, :instance => instance, :params => @params}
-    .panel-footer.clearfix
-      button.btn.btn-primary.btn-xs.pull-right[type='submit'] Filter
-  /= render 'properties_list', :properties => Service.properties(true)
-
-= form_tag compare_path, :method => :post, :role => 'form' do |f|
-  #comparison.panel.panel-default
     .panel-heading
       h3.panel-title= t('search.search.comparison')
     .panel-body
@@ -34,4 +24,30 @@
           - @services.each do |service|
             == render :partial => 'service', locals: { :service => service }
     .panel-footer.clearfix
-      button.btn.btn-primary.btn-xs.pull-right[type='submit'] Compare
+      button.btn.btn-primary.btn-xs.pull-right[type='submit']= t('search.search.compare')
+
+javascript:
+  $(document).ready(function() {
+    var comp_submit = $('form#comparison button[type=submit]');
+    comp_submit.attr('disabled', 'disabled');
+    $('form#comparison input:checkbox').change(function () {
+      var checked = $('form#comparison input:checkbox:checked');
+      var unchecked = $('form#comparison input:checkbox:not(:checked)');
+      var cnt = checked.length;
+
+      if(cnt == 0) { comp_submit.attr('disabled', 'disabled'); }
+      else if(cnt == 1) { comp_submit.removeAttr('disabled');  }
+      else if (cnt == 3) { unchecked.removeAttr('disabled'); }
+      else if(cnt == 4) { unchecked.attr('disabled', 'disabled'); }
+
+    });
+
+    $('form#comparison').submit(function (e) {
+      e.preventDefault();
+      var url = $(this).attr( 'action' );
+      $('form#comparison input:checkbox:checked').each(function () {
+        url += "/" + $(this).val();
+      });
+      window.location.replace(url);
+    });
+  });

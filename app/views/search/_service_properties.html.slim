@@ -3,6 +3,6 @@
     th.col-md-3.text-right= property.documentation
     td.col-md-9
       .form-inline
-        == render :partial => "value_#{property.type.to_s.demodulize.underscore}", :locals => {:value => property}
+        == render :partial => "value_#{property.type.to_s.demodulize.underscore}", :locals => {:value => property, :params => @params, :parent => parent}
 - elsif(property.type < SDL::Base::Type)
-  == render :partial => "property", :locals => {:property => property, :params => @params}
+  == render :partial => "property", :locals => {:property => property, :params => @params, :parent => parent}

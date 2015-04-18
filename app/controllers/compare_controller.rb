@@ -43,12 +43,9 @@ The services contained in the Open Service Broker are described using the [SDL-N
   formats ['html']
   error 404, 'Did not find specific service(s)'
   def show
-    service_names = [params[:service1],params[:service2],params[:service3],params[:service4]]
+    service_names = [params[:service1],params[:service2],params[:service3],params[:service4]].compact
 
-    services = Service.latest_with_status('approved').where(name: {'$in' => service_names})
-
-    # order
-    @services = services
+    @services = Service.names(service_names).to_a
     @services_count = @services.count + 1
 
     @properties = Hash[]
@@ -56,8 +53,6 @@ The services contained in the Open Service Broker are described using the [SDL-N
     @services.each do |service|
       @properties.deep_merge!(service.property_values)
     end
-
-    puts @properties.inspect
 
     if @services.blank?
       flash[:message] = t('compare.show.not_found')

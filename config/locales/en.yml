@@ -108,6 +108,8 @@ en:
   search:
     search:
       header: Search
+      filter: Filter
+      compare: Compare
       comparison: Compare services
       not_found: No service(s) available.
 

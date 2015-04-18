@@ -6,29 +6,14 @@
         - property.type.instances.each do |sym, instance|
           .checkbox
             label
-              - if params.has_key?(property.name.to_s.demodulize.underscore) && params[property.name.to_s.demodulize.underscore].include?(sym.to_s)
-                input[type="checkbox" name="#{property.name.to_s.demodulize.underscore}[]" value="#{sym}" checked="checked" ]
+              - if params.has_key?(parent + property.name.to_s.demodulize.underscore) && params[parent + property.name.to_s.demodulize.underscore].include?(sym.to_s)
+                input[type="checkbox" name="#{parent}#{property.name.to_s.demodulize.underscore}[]" value="#{sym}" checked="checked" ]
               - else
-                input[type="checkbox" name="#{property.name.to_s.demodulize.underscore}[]" value="#{sym}" ]
+                input[type="checkbox" name="#{parent}#{property.name.to_s.demodulize.underscore}[]" value="#{sym}" ]
               = " #{instance.documentation} "
               | &nbsp; &nbsp;
 
 - unless property.type.propertyless?
+  - parent = parent + property.name + '.'
   - property.type.properties.each do |prop|
-    == render :partial => "service_properties", :locals => {:property => prop}
-
-/dl.dl-horizontal
-  - properties.each do |property|
-    dt
-      code
-        = property.name
-        - if property.multi?
-          | []
-    dd
-      = property.documentation
-      | &nbsp;(
-      == "<a href='##{cheat_sheet_link(property.type)}'>#{property.type.name.demodulize}</a>"
-      - if property.inherited?
-        == ", #{t('cheat_sheet.inherited')})"
-      - else
-        | )
+    == render :partial => "service_properties", :locals => {:property => prop, :parent => parent}

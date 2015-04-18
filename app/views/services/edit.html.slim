@@ -42,8 +42,7 @@ javascript:
     editor.getSession().setMode('ace/mode/ruby')
     editor.setOptions({
         enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true
+        enableSnippets: true
     });
     editor.getSession().setValue(textarea.val());
     editor.getSession().on('change', function(){
