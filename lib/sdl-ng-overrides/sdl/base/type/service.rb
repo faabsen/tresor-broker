@@ -75,6 +75,55 @@ class SDL::Base::Type::Service < SDL::Base::Type
     where(:_id => {'$in' => @id_version_updated.collect{|ivu|ivu[:version_id]}})
   end
 
+  def self.names(service_names)
+    @services = collection.aggregate(
+      {'$match' => {
+          'status.identifier' => 'approved',
+          'service_deleted' => false,
+          'name' => {'$in' => service_names}
+      }},
+      {'$sort' => {:service_id => 1, :updated_at => -1}},
+      {'$group' => {
+          :_id => '$service_id',
+          :version_id => {
+              '$first' => '$_id'
+          }
+        }
+      }
+    )
+
+    where(:_id => {'$in' => @services.collect{|sid|sid[:version_id]}}).sort({"service_name.serialized_value" => 1})
+  end
+
+  def self.filter(parameters)
+    @match = {'$match' => {
+        'status.identifier' => 'approved',
+        'service_deleted' => false,
+    }}
+
+    parameters.each do |key, value|
+      if value == "true"
+        @match['$match'].store("#{key}.serialized_value", {"$eq" => true})
+      else
+        @match['$match'].store("#{key}.identifier", {"$in" => value})
+      end
+    end
+
+    @services = collection.aggregate(
+        @match,
+        {'$sort' => {:service_id => 1, :updated_at => -1}},
+        {'$group' => {
+            :_id => '$service_id',
+            :version_id => {
+                '$first' => '$_id'
+            }
+        }
+        }
+    )
+
+    where(:_id => {'$in' => @services.collect{|sid|sid[:version_id]}}).sort({"service_name.serialized_value" => 1})
+  end
+
   has_many :service_bookings
 
   def to_service_sdl
